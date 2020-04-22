@@ -1,3 +1,4 @@
 {
-  "mongoURI": "mongodb+srv://smwillson:Helloworld@contactkeeper-aelz1.mongodb.net/test?retryWrites=true&w=majority"
+  "mongoURI": "mongodb+srv://smwillson:Helloworld@contactkeeper-aelz1.mongodb.net/test?retryWrites=true&w=majority",
+  "jwtSecret": "hushhushhush"
 }
