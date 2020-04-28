@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import ContactContext from "../../context/contact/contactContext";
 
 const ContactForm = () => {
+  const contactContext = useContext(ContactContext);
+
   const [contact, setContact] = useState({
     name: "",
     email: "",
@@ -11,11 +14,17 @@ const ContactForm = () => {
   const { name, email, phone, type } = contact;
   const onChange = (event) =>
     setContact({
-      ...contact,
-      [event.target.name]: event.target.value,
+      ...contact, //copy the rest of the state
+      [event.target.name]: event.target.value, //name matches the values input by the user --name & value should match for this to work
     });
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+    contactContext.addContact(contact);
+    setContact({ name: "", email: "", phone: "", type: "personal" });
+  };
   return (
-    <form>
+    <form onSubmit={onSubmit}>
       <h2 className='text-primary'>Add new contact</h2>
       <input
         type='text'
@@ -44,6 +53,7 @@ const ContactForm = () => {
         name='type'
         value='personal'
         checked={type === "personal"}
+        onChange={onChange}
       />{" "}
       Personal{" "}
       <input
@@ -51,6 +61,7 @@ const ContactForm = () => {
         name='type'
         value='professional'
         checked={type === "professional"}
+        onChange={onChange}
       />
       Professional
       <div>
