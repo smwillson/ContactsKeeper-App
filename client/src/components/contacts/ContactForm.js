@@ -1,8 +1,19 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import ContactContext from "../../context/contact/contactContext";
 
 const ContactForm = () => {
   const contactContext = useContext(ContactContext);
+
+  const { addContact, updateContact, current, clearCurrent } = contactContext;
+
+  /**its like componentDidMount LC method */
+  useEffect(() => {
+    if (current !== null) {
+      setContact(current);
+    } else {
+      setContact({ name: "", email: "", phone: "", type: "personal" });
+    }
+  }, [contactContext, current]);
 
   const [contact, setContact] = useState({
     name: "",
@@ -20,12 +31,22 @@ const ContactForm = () => {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    contactContext.addContact(contact);
-    setContact({ name: "", email: "", phone: "", type: "personal" });
+    if (current === null) {
+      addContact(contact);
+    } else {
+      updateContact(contact);
+    }
+    clearAll();
+  };
+
+  const clearAll = () => {
+    clearCurrent();
   };
   return (
     <form onSubmit={onSubmit}>
-      <h2 className='text-primary'>Add new contact</h2>
+      <h2 className='text-primary'>
+        {current ? "Edit Contact" : "Add New Contact"}
+      </h2>
       <input
         type='text'
         placeholder='Name'
@@ -67,10 +88,15 @@ const ContactForm = () => {
       <div>
         <input
           type='submit'
-          value='Add Contact'
+          value={current ? "Update Contact" : "Add New Contact"}
           className='btn btn-primary btn-block'
         ></input>
       </div>
+      {current && (
+        <div className='btn btn-light btn-block' onClick={clearAll}>
+          Clear
+        </div>
+      )}
     </form>
   );
 };
